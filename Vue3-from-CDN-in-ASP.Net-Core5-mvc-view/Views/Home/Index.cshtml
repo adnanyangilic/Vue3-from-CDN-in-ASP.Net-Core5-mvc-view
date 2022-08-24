@@ -1,0 +1,191 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div id="app">
+      <img
+        v-bind:src="picture"
+        :alt="`${firstName} ${lastName}`"
+        :class="gender"
+      />
+      <h1>{{firstName}} {{lastName}}</h1>
+      <h3>Email: {{email}}</h3>
+      <button :class="gender" @@click="getUser()">Get Random User</button>
+</div>
+<br/>
+<hr/>
+<br/>
+
+ <div id="html">
+        <div class="d-flex justify-content-center mt-5">
+            <div v-for="hero in heroes" :key="hero.id" class="card mt-5" style="width: 18rem">
+                <div class="card" style="width: 18rem">
+                    <img :src="hero.image" class="card-img-top" alt="Vue essentials" />
+                    <a v-bind:href="url" class="btn btn-info"> Google </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ hero.number }}</h5>
+                        <label class="form-label">Greeting</label>
+                        <input v-model="greeting" type="text" class="form-control">
+                        <p>{{ greeting }}</p>
+                        <h5>Count: {{ count }}</h5>
+                        <p v-if="count > 5 " class="card-text">in stock</p>
+                        <p v-else-if="count <= 5 && count > 0" class="card-text">
+                            limited stock
+                        </p>
+                        <p v-else="count === 0 " class="card-text">out of stock</p>
+                        <h1 v-show="count === 0">Out of stock</h1>
+                        <h1 v-show="count > 0">in stock</h1>
+                        <button @@click.prevent="increment" class="btn btn-primary me-2">
+                Increment
+              </button>
+                        <button @@click.prevent="decrement" class="btn btn-primary ms-2">
+                Decrement
+              </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+ </div>
+
+ <br/>
+ <hr/>
+ <br/>
+ <div id="zapp">
+    <p>{{ message }}</p>
+    <input v-model="message" />
+  </div>
+ <br/>
+ <hr/>
+ <br/>
+  <div id="tapp">
+    <p>{{message}}</p>
+    <p>{{reversedMessage}}</p>
+  </div>
+ <br/>
+ <hr/>
+ <br/>
+  <div id="capp">
+    <button @@click="count++">increment</button>
+    count: {{ count }}
+  </div>
+ <br/>
+ <hr/>
+ <br/>
+
+
+@section Scripts{
+<script>
+const app = Vue.createApp({
+  data() {
+    return {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john@gmail.com',
+      gender: 'male',
+      picture: 'https://randomuser.me/api/portraits/men/10.jpg',
+    }
+  },
+  methods: {
+    async getUser() {
+      const res = await fetch('https://randomuser.me/api')
+      const { results } = await res.json()
+
+      // console.log(results)
+
+      this.firstName = results[0].name.first
+      this.lastName = results[0].name.last
+      this.email = results[0].email
+      this.gender = results[0].gender
+      this.picture = results[0].picture.large
+    },
+  },
+})
+
+app.mount('#app')
+</script>
+
+
+<script>
+        const Script = {
+            data() {
+                return {
+                    number: "Gamora",
+                    image: "./images/a.jpg",
+                    url: "https://www.google.com",
+                    greeting: '',
+                    count: 0,
+                    heroes: [{
+                        id: 01,
+                        number: "Vase",
+                        image: "./images/b.jpg"
+                    }, {
+                        id: 02,
+                        number: "Set",
+                        image: "./images/c.jpg"
+                    }, {
+                        id: 03,
+                        number: "Flamingo",
+                        image: "./images/d.jpg"
+                    }, {
+                        id: 04,
+                        number: "Porcelain",
+                        image: "./images/e.jpg"
+                    }, ],
+                };
+            },
+            methods: {
+                increment() {
+                    this.count++;
+                },
+                decrement() {
+                    this.count--;
+                },
+            },
+        };
+        Vue.createApp(Script).mount("#html");
+    </script>
+
+     <script>
+    const Zapp = {
+      data() {
+        return {
+          message: "hello world."
+        };
+      }
+    };
+
+    Vue.createApp(Zapp).mount("#zapp");
+  </script>
+
+  <script>
+    const Tapp = {
+      data() {
+        return {
+          message: "hello world"
+        };
+      },
+      computed: {
+        reversedMessage() {
+          return this.message.split("").reverse().join("");
+        }
+      }
+    };
+
+    const tapp = Vue.createApp(Tapp);
+    tapp.mount("#tapp");
+  </script>
+
+  <script>
+    const Counter = {
+      data() {
+        return {
+          count: 0
+        };
+      }
+    };
+
+    Vue.createApp(Counter).mount("#capp");
+  </script>
+
+
+
+}
