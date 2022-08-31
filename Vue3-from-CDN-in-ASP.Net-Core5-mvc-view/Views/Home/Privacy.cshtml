@@ -1,6 +1,198 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+<div id="app">
+    <!-- Buttom New -->
+    <div class="container">
+      <div class="d-flex flex-row row mx-md-n5">
+        <button id="btn-new" @Click="onNew" style="margin: 10px;" type="button"
+          class="btn btn-primary col py-3 px-md-5 border" data-toggle="modal" data-target="#exampleModal"
+          data-whatever="@mdo">Novo Registro</button>
 
-<p>Use this page to detail your site's privacy policy.</p>
+        <!-- Button busca -->
+        <div class="d-inline p-2 col py-3 px-md-5 border">
+          <input class="col-md-6" type="text" id="buscar" v-model="busca">
+          <button id="btn-buscar" @Click="onBusca" type="button" class="btn btn-primary col-md-5 m-2"
+            data-toggle="modal">Buscar</button>
+        </div>
+      </div>
+
+
+
+      <!-- Modal New or Edit -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 id="titulo-dialog" class="modal-title" id="exampleModalLabel">Cadastrar Contato</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">Nome:</label>
+                  <input type="text" v-model="nome" placeholder="nome e sobrenome" class="form-control"
+                    id="recipient-name">
+                </div>
+                <div class="form-group">
+                  <label for="message-number" class="col-form-label">Telefone Celular:</label>
+                  <input type="text" v-model="fone" maxlength="11" placeholder="(99)99999-9999" class="form-control"
+                    id="fone-mask">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" @Click="limpar" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button id="btn-salvar" type="button" @Click="onSalvar" class="btn btn-primary"
+                data-dismiss="modal">Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="container">
+        <div class="row">
+          <table id="tabela" class="table table-hover">
+            <thead class="thead-light table-bordered">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="contato in tableInfosFiltro" :class="{dddSaoPaulo: addClassName(contato.telefone)}">
+                <th scope="row">{{ dados.indexOf(contato)+1 }}</th>
+                <td>{{contato.nome}}</td>
+                <td>{{contato.telefone}}</td>
+                <td> <button type="button" @Click="onEdit(contato)" style="margin: 10px;" class="btn btn-success"
+                    data-toggle="modal" data-target="#exampleModal">Editar</button>
+                  <button type="button" @Click="onRemover(contato)" class="btn btn-danger" data-toggle="modal"
+                    data-target="#remover">Excluir</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+    
+    @Section scripts{
+    <script>
+      Vue.createApp({
+        data() {
+          return {
+            nome: '',
+            fone: '',
+            contato: {},
+            title: 'Cadastrar Contato',
+            edit: false,
+            excluido: false,
+            busca: '',
+            dados: [
+              { nome: "Augusto Silva", telefone: "(99) 99224-2759" },
+              { nome: "Alessandra Silva", telefone: "(99) 99224-2759" },
+              { nome: "Maria Silva", telefone: "(11) 99224-2759" },
+              { nome: "Joao Silva", telefone: "(99) 99224-2759" },
+              { nome: "Jose Silva", telefone: "(99) 99224-2759" },
+              { nome: "Madalena Dura Silva", telefone: "(11) 99224-2759" },
+
+            ],
+          }
+        },
+        computed: {
+          tableInfosFiltro() {
+            if (this.busca == '') return this.dados;
+            if (this.busca) {
+              const result = this.dados.filter(c => c.nome.toLocaleUpperCase().includes(this.busca.toLocaleUpperCase(0)))
+              return result;
+
+            } else {
+              this.dados;
+            }
+
+
+
+          }
+        },
+        methods: {
+          onNew() {
+            this.edit = false
+            document.getElementById('btn-salvar').innerHTML = "Cadastrar"
+            document.getElementById('titulo-dialog').innerText = 'Cadastrar Contato'
+          },
+          onBusca() {
+            alert("Buscar: " + this.busca)
+          },
+          onSalvar() {
+            let condicao = this.nome.split(' ').length >= 2 && this.nome.length >= 3
+            if (this.edit && condicao) {
+              let index = this.dados.indexOf(this.contato)
+              let str = this.fone
+              str = str.replace(/[ÀÁÂÃÄÅ]/g, "A");
+              str = str.replace(/[àáâãäå]/g, "a");
+              str = str.replace(/[ÈÉÊË]/g, "E");
+              console.log(str.replace(/[^a-z0-9]/gi, ''));
+              this.dados[index] = { nome: this.nome, telefone: this.maskPhone(this.fone) }
+            } else {
+              if (condicao) {
+                this.dados.push({ nome: this.nome, telefone: this.maskPhone(this.fone) })
+                // TODO: Mensagen de sucesso
+              } else {
+                // TODO: Mensagen de sucesso
+              }
+            }
+
+            this.limpar()
+          },
+          onEdit(contato) {
+            this.edit = true
+            document.getElementById('btn-salvar').innerHTML = "Atualizar"
+            document.getElementById('titulo-dialog').innerText = 'Editar Contato';
+            this.nome = contato.nome
+            this.fone = contato.telefone
+            this.contato = contato
+
+          },
+          onRemover(contato) {
+
+            this.excluido = false
+            let index = this.dados.indexOf(contato)
+            this.dados.splice(index, 1)
+            this.limpar()
+          },
+          limpar() {
+            this.nome = ''
+            this.fone = ''
+          },
+          addClassName(num) {
+            let el = num.replace(/^(\d{2})/, "$1").substring(1, 3)
+            if (el === '11') {
+              return true
+            } else {
+              return false
+            }
+          },
+          maskPhone(value) {
+            return value
+              .replace(/\D/g, "")
+              .replace(/(\d{2})(\d)/, "($1) $2")
+              .replace(/(\d{5})(\d)/, "$1-$2")
+              .replace(/(-\d{4})(\d+?)$/, "$1");
+          }
+        }
+      }).mount('#app')
+    </script>
+    <script type="text/javascript">
+      $("#fone-mask").mask("(00) 00000-0000");
+    </script>
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"></script>
+    
+    
+    }
