@@ -43,7 +43,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" @@Click="limpar" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-              <button id="btn-salvar" type="button" @Click="onSalvar" class="btn btn-primary"
+              <button id="btn-salvar" type="button" @@Click="onSalvar" class="btn btn-primary"
                 data-dismiss="modal">Salvar</button>
             </div>
           </div>
@@ -67,7 +67,7 @@
                 <th scope="row">{{ dados.indexOf(contato)+1 }}</th>
                 <td>{{contato.nome}}</td>
                 <td>{{contato.telefone}}</td>
-                <td> <button type="button" @Click="onEdit(contato)" style="margin: 10px;" class="btn btn-success"
+                <td> <button type="button" @@Click="onEdit(contato)" style="margin: 10px;" class="btn btn-success"
                     data-toggle="modal" data-target="#exampleModal">Editar</button>
                   <button type="button" @@Click="onRemover(contato)" class="btn btn-danger" data-toggle="modal"
                     data-target="#remover">Excluir</button>
