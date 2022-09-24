@@ -2,14 +2,14 @@
     <!-- Buttom New -->
     <div class="container">
       <div class="d-flex flex-row row mx-md-n5">
-        <button id="btn-new" @Click="onNew" style="margin: 10px;" type="button"
+        <button id="btn-new" @@Click="onNew" style="margin: 10px;" type="button"
           class="btn btn-primary col py-3 px-md-5 border" data-toggle="modal" data-target="#exampleModal"
-          data-whatever="@mdo">Novo Registro</button>
+          data-whatever="@@mdo">Novo Registro</button>
 
         <!-- Button busca -->
         <div class="d-inline p-2 col py-3 px-md-5 border">
           <input class="col-md-6" type="text" id="buscar" v-model="busca">
-          <button id="btn-buscar" @Click="onBusca" type="button" class="btn btn-primary col-md-5 m-2"
+          <button id="btn-buscar" @@Click="onBusca" type="button" class="btn btn-primary col-md-5 m-2"
             data-toggle="modal">Buscar</button>
         </div>
       </div>
@@ -42,7 +42,7 @@
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" @Click="limpar" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" @@Click="limpar" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
               <button id="btn-salvar" type="button" @Click="onSalvar" class="btn btn-primary"
                 data-dismiss="modal">Salvar</button>
             </div>
@@ -69,7 +69,7 @@
                 <td>{{contato.telefone}}</td>
                 <td> <button type="button" @Click="onEdit(contato)" style="margin: 10px;" class="btn btn-success"
                     data-toggle="modal" data-target="#exampleModal">Editar</button>
-                  <button type="button" @Click="onRemover(contato)" class="btn btn-danger" data-toggle="modal"
+                  <button type="button" @@Click="onRemover(contato)" class="btn btn-danger" data-toggle="modal"
                     data-target="#remover">Excluir</button>
                 </td>
               </tr>
@@ -80,7 +80,7 @@
       </div>
     </div>
     
-    @Section scripts{
+    @section Scripts{
     <script>
       Vue.createApp({
         data() {
